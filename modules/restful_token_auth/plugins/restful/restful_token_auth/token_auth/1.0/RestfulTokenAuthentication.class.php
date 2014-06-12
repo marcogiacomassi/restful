@@ -38,9 +38,6 @@ class RestfulTokenAuthentication extends \RestfulEntityBase {
     // Login the user.
     $this->loginUser($account);
 
-    // Set CORS.
-    $this->setCors();
-
     // Check if there is a token that did not expire yet.
     $query = new EntityFieldQuery();
     $result = $query
@@ -110,19 +107,5 @@ class RestfulTokenAuthentication extends \RestfulEntityBase {
 
     $login_array = array ('name' => $account->name);
     user_login_finalize($login_array);
-  }
-
-  /**
-   * Set HTTP access control (CORS) for the request.
-   */
-  public function setCors() {
-    if (!variable_get('restful_token_auth_set_cors', TRUE)) {
-      // Setting CORS is disabled.
-      return;
-    }
-
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Authorization');
   }
 }

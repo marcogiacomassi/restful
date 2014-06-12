@@ -88,6 +88,5 @@ function restful_token_auth_uninstall() {
   variable_del('restful_token_auth_delete_expired_tokens');
   variable_del('restful_token_auth_login_user');
   variable_del('restful_token_auth_plugin_menu_item');
-  variable_del('restful_token_auth_set_cors');
 }
 
