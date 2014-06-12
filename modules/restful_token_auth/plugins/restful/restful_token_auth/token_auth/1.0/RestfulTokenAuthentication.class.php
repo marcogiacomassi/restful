@@ -35,6 +35,12 @@ class RestfulTokenAuthentication extends \RestfulEntityBase {
    * Create a token for a user, and return its value.
    */
   public function getOrCreateToken($request = NULL, stdClass $account = NULL) {
+    // Login the user.
+    $this->loginUser($account);
+
+    // Set CORS.
+    $this->setCors();
+
     // Check if there is a token that did not expire yet.
     $query = new EntityFieldQuery();
     $result = $query
@@ -80,10 +86,38 @@ class RestfulTokenAuthentication extends \RestfulEntityBase {
   }
 
   /**
+   * If a user is not logged in, log them in.
+   *
+   * Even though this plugin returns a token, it is possible that the
+   * implementing module would like also the get cookies back.
+   *
+   * @param $account
+   *   The user object that was retrieved by the \RestfulAuthenticationManager.
+   */
+  public function loginUser($account) {
+    if (!variable_get('restful_token_auth_login_user', TRUE)) {
+      return;
+    }
+
+    global $user;
+    if ($user->uid) {
+      // User is already logged in, which means they probably autenticated using
+      // cookies.
+      return;
+    }
+
+    $user = user_load($account->uid);
+
+    $login_array = array ('name' => $account->name);
+    user_login_finalize($login_array);
+  }
+
+  /**
    * Set HTTP access control (CORS) for the request.
    */
   public function setCors() {
     if (!variable_get('restful_token_auth_set_cors', TRUE)) {
+      // Setting CORS is disabled.
       return;
     }
 
