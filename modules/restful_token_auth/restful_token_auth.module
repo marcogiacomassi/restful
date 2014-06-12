@@ -19,7 +19,9 @@ function restful_token_auth_menu() {
   $items[$path] = array(
     'title' => 'Login',
     'description' => 'Login with an access token response.',
-    'access callback' => 'user_is_anonymous',
+    // We allow access to both anonymous and authenticated users, so even
+    // clients authenticating with a cookie, can get their token.
+    'access callback' => TRUE,
     'page callback' => 'restful_menu_process_callback',
     'page arguments' => array('1', 'token_auth'),
     'delivery callback' => 'restful_json_output',
