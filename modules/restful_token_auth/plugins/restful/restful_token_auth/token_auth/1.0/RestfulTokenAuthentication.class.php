@@ -78,4 +78,17 @@ class RestfulTokenAuthentication extends \RestfulEntityBase {
 
     return $this->viewEntity($id, $request, $account);
   }
+
+  /**
+   * Set HTTP access control (CORS) for the request.
+   */
+  public function setCors() {
+    if (!variable_get('restful_token_auth_set_cors', TRUE)) {
+      return;
+    }
+
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Allow-Headers: Authorization');
+  }
 }
