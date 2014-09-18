@@ -72,6 +72,14 @@ class RestfulTokenAuthentication extends \RestfulEntityBase {
         'name' => 'self',
         'token' => drupal_random_key(),
       );
+      
+      // Add expire configuration variable.
+      if (variable_get('restful_token_auth_expire_time', FALSE)) {
+        // Accepted strtotime formats : +1 day, +1 week, + 1 month.
+        $expire = strtotime(variable_get('restful_token_auth_expire_time', FALSE));
+        $values['expire'] = $expire;
+      }
+      
       $auth_token = entity_create('restful_token_auth', $values);
       entity_save('restful_token_auth', $auth_token);
       $id = $auth_token->id;
